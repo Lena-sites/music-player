@@ -19,7 +19,11 @@ class MyApp extends StatelessWidget {
       valueListenable: themeNotifier,
       builder: (context, currentTheme, child) {
         return MaterialApp(
-          theme: ThemeData(
+          themeMode: currentTheme,
+          // Tema terang
+          theme: ThemeData.light(),
+          // Tema gelap
+          darkTheme: ThemeData(
             brightness: Brightness.dark,
             scaffoldBackgroundColor: const Color(0xFF121212),
             colorScheme: const ColorScheme.dark(
@@ -32,7 +36,9 @@ class MyApp extends StatelessWidget {
               elevation: 0,
               centerTitle: true,
             ),
-            cardTheme: const CardThemeData(color: Color(0xFF1E1E1E)),
+            cardTheme: const CardThemeData(
+              color: Color(0xFF1E1E1E),
+            ),
             bottomNavigationBarTheme: const BottomNavigationBarThemeData(
               backgroundColor: Color(0xFF1E1E1E),
               selectedItemColor: Color(0xFF10B981),
@@ -52,7 +58,6 @@ class MyApp extends StatelessWidget {
 }
 
 class SongsPage extends StatefulWidget{
-
   const SongsPage({super.key});
 
   @override
@@ -63,9 +68,6 @@ class _SongsPageState extends State<SongsPage>{
   final searchController = TextEditingController();
   List songs = [];
   bool isSearching = false;
-
-  // late final bool isDarkMode;
-  // late final Function(bool) onThemeChanged;
 
   Future<void> cariLagu() async {
     if (searchController.text.isEmpty) {
@@ -101,139 +103,139 @@ class _SongsPageState extends State<SongsPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Music Player'),
-        automaticallyImplyLeading: false,
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search_outlined),
-                  hintText: "What do you want to listen to?",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+        appBar: AppBar(
+          title: Text('Music Player'),
+          automaticallyImplyLeading: false,
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search_outlined),
+                    hintText: "What do you want to listen to?",
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12))
+                ),
+                onChanged: (value) {
+                  if (value.isEmpty) {
+                    setState(() {
+                      isSearching = false;
+                      songs = [];
+                    });
+                  }
+                },
+                onSubmitted: (value){
+                  cariLagu();
+                },
               ),
-              onChanged: (value) {
-                if (value.isEmpty) {
-                  setState(() {
-                    isSearching = false;
-                    songs = [];
-                  });
-                }
-              },
-              onSubmitted: (value){
-                cariLagu();
-              },
-            ),
-            SizedBox(height: 8,),
-            Expanded(
-                child: isSearching ?
-                songs.isEmpty ? Center(child: Text('Pencarian tidak ditemukan', style: TextStyle(color: Colors.grey, fontSize: 14,))):
-                GridView.builder(
-                  itemCount: songs.length,
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    mainAxisExtent: 230,
-                  ),
-                  itemBuilder: (context, index) {
-                    // Menentukan data yang ditampilkan
-                    final song = songs[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => NowPlayingPage(song: song)));
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero,
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Cover album
-                              Image.network(
-                                (song['artworkUrl100'] ?? '').replaceAll('100x100bb', '1200x1200bb'),
-                                height: 140,
-                                width: double.infinity,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Center(
-                                    child: Container(
-                                      height: 140,
-                                      width: double.infinity,
-                                      color: Colors.grey[300],
-                                      child: Icon(Icons.music_note, size: 50),
-                                    ),
-                                  );
-                                },
-                              ),
-                              SizedBox(height: 8),
-                              // Judul lagu
-                              Text(
-                                song['trackName'] ?? song['name'] ?? '-',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+              SizedBox(height: 8,),
+              Expanded(
+                  child: isSearching ?
+                  songs.isEmpty ? Center(child: Text('Pencarian tidak ditemukan', style: TextStyle(color: Colors.grey, fontSize: 14,))):
+                  GridView.builder(
+                    itemCount: songs.length,
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      mainAxisExtent: 230,
+                    ),
+                    itemBuilder: (context, index) {
+                      // Menentukan data yang ditampilkan
+                      final song = songs[index];
+                      return GestureDetector(
+                        onTap: () async {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => NowPlayingPage(song: song)));
+                        },
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Cover album
+                                Image.network(
+                                  (song['artworkUrl100'] ?? '').replaceAll('100x100bb', '1200x1200bb'),
+                                  height: 140,
+                                  width: double.infinity,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Center(
+                                      child: Container(
+                                        height: 140,
+                                        width: double.infinity,
+                                        color: Colors.grey[300],
+                                        child: Icon(Icons.music_note, size: 50),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ),
-                              // Nama artis
-                              Text(
-                                song['artistName'] ?? '-',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 10,
+                                SizedBox(height: 8),
+                                // Judul lagu
+                                Text(
+                                  song['trackName'] ?? song['name'] ?? '-',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                // Nama artis
+                                Text(
+                                  song['artistName'] ?? '-',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ): //kondisi klo belum ada yang di search
-                Center(
-                  child: Icon(Icons.queue_music_outlined, color: Colors.grey[200], size: 150,),
-                )
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          MiniPlayer(),
-          BottomNavigationBar(
-            currentIndex: 0,
-            type: BottomNavigationBarType.fixed,
-            onTap: (index) {
-              if(index == 0){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SongsPage()),
-                );
-              } else if (index == 1){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AlbumsPage()),
-                );
-              }else if (index == 2){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Profile()),
-                );
-              }
-            },
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Songs'),
-              BottomNavigationBarItem(icon: Icon(Icons.album), label: 'Albums'),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+                      );
+                    },
+                  ): //kondisi klo belum ada yang di search
+                  Center(
+                    child: Icon(Icons.queue_music_outlined, color: Colors.grey[200], size: 150,),
+                  )
+              ),
             ],
           ),
-        ],
-      )
+        ),
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MiniPlayer(),
+            BottomNavigationBar(
+              currentIndex: 0,
+              type: BottomNavigationBarType.fixed,
+              onTap: (index) {
+                if(index == 0){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SongsPage()),
+                  );
+                } else if (index == 1){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AlbumsPage()),
+                  );
+                }else if (index == 2){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Profile()),
+                  );
+                }
+              },
+              items: [
+                BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Songs'),
+                BottomNavigationBarItem(icon: Icon(Icons.album), label: 'Albums'),
+                BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+              ],
+            ),
+          ],
+        )
     );
   }
 }

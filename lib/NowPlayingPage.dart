@@ -62,17 +62,28 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
 
   Future<void> playSong() async {
     try {
+      // Hentikan lagu sebelumnya terlebih dahulu
+      await AudioService.player.stop();
+
       final previewUrl = widget.song['previewUrl'];
+
       if (previewUrl == null) return;
 
+      // Memasang audio source dari lagu yang baru dipilih
       await AudioService.player.setAudioSource(
-        AudioSource.uri(Uri.parse(previewUrl), tag: widget.song),
+        AudioSource.uri(
+          Uri.parse(previewUrl),
+          tag: widget.song,
+        ),
       );
 
       if (!mounted) return;
+
       setState(() => isLoading = false);
 
+      // Memutar lagu yang baru dipilih
       AudioService.player.play();
+
     } catch (e) {
       debugPrint('Gagal memutar lagu: $e');
     } finally {
@@ -81,6 +92,28 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
       }
     }
   }
+
+  // Future<void> playSong() async {
+  //   try {
+  //     final previewUrl = widget.song['previewUrl'];
+  //     if (previewUrl == null) return;
+  //
+  //     await AudioService.player.setAudioSource(
+  //       AudioSource.uri(Uri.parse(previewUrl), tag: widget.song),
+  //     );
+  //
+  //     if (!mounted) return;
+  //     setState(() => isLoading = false);
+  //
+  //     AudioService.player.play();
+  //   } catch (e) {
+  //     debugPrint('Gagal memutar lagu: $e');
+  //   } finally {
+  //     if (mounted && isLoading) {
+  //       setState(() => isLoading = false);
+  //     }
+  //   }
+  // }
 
   String formatDuration(Duration duration) {
     String minutes = duration.inMinutes.toString();
