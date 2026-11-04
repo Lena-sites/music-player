@@ -4,6 +4,7 @@ import 'package:project11/AlbumDetailPage.dart';
 import 'package:project11/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:project11/NowPlayingPage.dart';
+import 'package:project11/profile.dart';
 
 class AlbumsPage extends StatefulWidget {
   const AlbumsPage({super.key});
@@ -150,11 +151,15 @@ class _AlbumsPageState extends State<AlbumsPage>{
                 } else if (index == 1){
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AlbumsPage()),
                   );
+                }else if (index == 2){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Profile()),
+                  );
                 }
               },
               items: [
                 BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Songs'),
                 BottomNavigationBarItem(icon: Icon(Icons.album), label: 'Albums'),
+                BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
               ],
             ),
           ],

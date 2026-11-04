@@ -2,54 +2,70 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:project11/AlbumsPage.dart';
-// import 'package:just_audio/just_audio.dart';
 import 'package:project11/NowPlayingPage.dart';
+import 'package:project11/profile.dart';
+import 'package:project11/controller_theme_dan_profile.dart';
 
 void main() {
-  runApp(MaterialApp(
-    theme: ThemeData(
-      brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF121212),
-      colorScheme: const ColorScheme.dark(
-        primary: Color(0xFF10B981),
-        surface: Color(0xFF1E1E1E),
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF121212),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      cardTheme: const CardThemeData(color: Color(0xFF1E1E1E)),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Color(0xFF1E1E1E),
-        selectedItemColor: Color(0xFF10B981),
-        unselectedItemColor: Colors.grey,
-      ),
-      inputDecorationTheme: const InputDecorationTheme(
-        hintStyle: TextStyle(color: Colors.grey),
-        prefixIconColor: Colors.grey,
-      ),
-    ),
-    home: SongsPage(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (context, currentTheme, child) {
+        return MaterialApp(
+          theme: ThemeData(
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: const Color(0xFF121212),
+            colorScheme: const ColorScheme.dark(
+              primary: Color(0xFF10B981),
+              surface: Color(0xFF1E1E1E),
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFF121212),
+              foregroundColor: Colors.white,
+              elevation: 0,
+              centerTitle: true,
+            ),
+            cardTheme: const CardThemeData(color: Color(0xFF1E1E1E)),
+            bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+              backgroundColor: Color(0xFF1E1E1E),
+              selectedItemColor: Color(0xFF10B981),
+              unselectedItemColor: Colors.grey,
+            ),
+            inputDecorationTheme: const InputDecorationTheme(
+              hintStyle: TextStyle(color: Colors.grey),
+              prefixIconColor: Colors.grey,
+            ),
+          ),
+          home: SongsPage(),
+          debugShowCheckedModeBanner: false,
+        );
+      },
+    );
+  }
 }
 
 class SongsPage extends StatefulWidget{
+
   const SongsPage({super.key});
 
   @override
-  State<SongsPage> createState() => _MyAppState();
+  State<SongsPage> createState() => _SongsPageState();
 }
 
-class _MyAppState extends State<SongsPage>{
+class _SongsPageState extends State<SongsPage>{
   final searchController = TextEditingController();
   List songs = [];
   bool isSearching = false;
 
-  // Pemutar musik
-  // final AudioPlayer player = AudioService.player;
+  // late final bool isDarkMode;
+  // late final Function(bool) onThemeChanged;
 
   Future<void> cariLagu() async {
     if (searchController.text.isEmpty) {
@@ -129,8 +145,6 @@ class _MyAppState extends State<SongsPage>{
                     final song = songs[index];
                     return GestureDetector(
                       onTap: () async {
-                        // await player.stop();
-                        // if (!context.mounted) return;
                         Navigator.push(context, MaterialPageRoute(builder: (context) => NowPlayingPage(song: song)));
                       },
                       child: Card(
@@ -207,11 +221,15 @@ class _MyAppState extends State<SongsPage>{
               } else if (index == 1){
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AlbumsPage()),
                 );
+              }else if (index == 2){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Profile()),
+                );
               }
             },
             items: [
               BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Songs'),
               BottomNavigationBarItem(icon: Icon(Icons.album), label: 'Albums'),
+              BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
             ],
           ),
         ],
