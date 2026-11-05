@@ -105,6 +105,7 @@ class _SongsPageState extends State<SongsPage>{
     return Scaffold(
         appBar: AppBar(
           title: Text('Music Player'),
+          centerTitle: true,
           automaticallyImplyLeading: false,
         ),
         body: Padding(
