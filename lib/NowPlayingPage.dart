@@ -93,28 +93,6 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
     }
   }
 
-  // Future<void> playSong() async {
-  //   try {
-  //     final previewUrl = widget.song['previewUrl'];
-  //     if (previewUrl == null) return;
-  //
-  //     await AudioService.player.setAudioSource(
-  //       AudioSource.uri(Uri.parse(previewUrl), tag: widget.song),
-  //     );
-  //
-  //     if (!mounted) return;
-  //     setState(() => isLoading = false);
-  //
-  //     AudioService.player.play();
-  //   } catch (e) {
-  //     debugPrint('Gagal memutar lagu: $e');
-  //   } finally {
-  //     if (mounted && isLoading) {
-  //       setState(() => isLoading = false);
-  //     }
-  //   }
-  // }
-
   String formatDuration(Duration duration) {
     String minutes = duration.inMinutes.toString();
     String seconds =
@@ -180,18 +158,20 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
   @override
   Widget build(BuildContext context) {
     final song = _currentSong;
+    final cs = Theme.of(context).colorScheme;
     final artwork = song['artworkUrl100'] ?? '';
     final highQualityArtwork = artwork.replaceAll('100x100bb', '1200x1200bb');
 
     return Scaffold(
       appBar: AppBar(
-        foregroundColor: Colors.white,
+        foregroundColor: cs.onSurface,
+        backgroundColor: cs.surface,
         elevation: 0,
         title: const Text('Now Playing'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -226,7 +206,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.white,
+                color: cs.onSurface,
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
@@ -235,7 +215,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
             Text(
               song['artistName'] ?? '-',
               style: TextStyle(
-                color: Colors.grey,
+                color: cs.onSurfaceVariant,
                 fontSize: 16,
               ),
             ),
@@ -403,7 +383,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                 margin: EdgeInsets.only(top: 15),
                 padding: EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.grey[900],
+                  color: cs.surfaceContainer,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: isLoadingLyrics ? Center(child: CircularProgressIndicator(color: Color(0xFF10B981)))
@@ -411,7 +391,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                   child: Text(
                     lyrics.isEmpty ? 'Lirik tidak tersedia.' : lyrics,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 15, height: 1.8),
+                    style: TextStyle(color: cs.onSurface, fontSize: 15, height: 1.8),
                   ),
                 ),
               ),
@@ -429,7 +409,7 @@ class AudioService {
   static final AudioPlayer player = AudioPlayer();
 }
 
-// Mini player: tampil di atas navigation bar saat ada lagu yang sedang diputar
+// Mini player dan bakal tampil di atas navigation bar saat ada lagu yang sedang diputar
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
 
@@ -448,7 +428,7 @@ class MiniPlayer extends StatelessWidget {
         final song = tag;
 
         return Material(
-          color: const Color(0xFF1E1E1E),
+          color: Color(0xFF1E1E1E),
           child: InkWell(
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => NowPlayingPage(song: song, preloaded: true),),);
@@ -538,9 +518,8 @@ class MiniPlayer extends StatelessWidget {
                           final playing = state?.playing ?? false;
                           final processing = state?.processingState;
 
-                          if (processing == ProcessingState.loading ||
-                              processing == ProcessingState.buffering) {
-                            return const SizedBox(
+                          if (processing == ProcessingState.loading || processing == ProcessingState.buffering) {
+                            return SizedBox(
                               width: 40,
                               height: 40,
                               child: Padding(
@@ -554,10 +533,8 @@ class MiniPlayer extends StatelessWidget {
                           }
                           return IconButton(
                             icon: Icon(
-                              playing
-                                  ? Icons.pause_circle_filled
-                                  : Icons.play_circle_fill,
-                              color: const Color(0xFF10B981),
+                              playing ? Icons.pause_circle_filled : Icons.play_circle_fill,
+                              color: Color(0xFF10B981),
                               size: 40,
                             ),
                             onPressed: () async {

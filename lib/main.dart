@@ -218,10 +218,7 @@ class _SongsPageState extends State<SongsPage>{
               currentIndex: 0,
               type: BottomNavigationBarType.fixed,
               onTap: (index) {
-                if(index == 0){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SongsPage()),
-                  );
-                } else if (index == 1){
+                if (index == 1){
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AlbumsPage()),
                   );
                 }else if (index == 2){

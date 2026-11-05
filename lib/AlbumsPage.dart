@@ -148,10 +148,7 @@ class _AlbumsPageState extends State<AlbumsPage>{
                 if(index == 0){
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SongsPage()),
                   );
-                } else if (index == 1){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AlbumsPage()),
-                  );
-                }else if (index == 2){
+                } else if (index == 2){
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Profile()),
                   );
                 }
