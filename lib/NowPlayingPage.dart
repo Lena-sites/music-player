@@ -239,7 +239,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                           value: currentPosition,
                           min: 0,
                           max: maxDuration,
-                          activeColor: const Color(0xFF10B981),
+                          activeColor: Color(0xFF10B981),
                           inactiveColor: Colors.grey[700],
                           // Posisi sementara saat slider digeser
                           onChanged: duration == null ? null : (value) {
@@ -301,7 +301,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                   },
                   icon: Icon(
                     Icons.replay,
-                    color: Colors.white,
+                    color: cs.onSurface,
                     size: 30,
                   ),
                 ),
@@ -344,7 +344,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                   },
                   icon: Icon(
                     Icons.restart_alt,
-                    color: Colors.white,
+                    color: cs.onSurface,
                     size: 30,
                   ),
                 ),

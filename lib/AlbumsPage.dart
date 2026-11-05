@@ -48,6 +48,7 @@ class _AlbumsPageState extends State<AlbumsPage>{
     return Scaffold(
       appBar: AppBar(
         title: Text('Albums'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       body: Padding(
